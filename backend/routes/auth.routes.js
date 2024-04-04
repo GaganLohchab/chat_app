@@ -1,4 +1,4 @@
-import  Express  from "express";
+import  express  from "express";
 import { Router } from "express";
 import { signup, login, logout} from "../controllers/auth.controller.js";
 
