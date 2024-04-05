@@ -1,35 +1,54 @@
+import mongoose from "mongoose";
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 
 export const sendMessage = async (req, res) => {
     try {
-        const {message} = req.body;
-        const {id:receiverId} =req.params;
-        const senderId = req.user._id
+        const { message } = req.body;
+        const { id: receiverId } = req.params;
+        const senderId = req.user._id;
+        
 
-        let Conversation = await Conversation.findOne({
+        let conversation = await Conversation.findOne({
             participants: { $all: [senderId, receiverId] },
-        })
+        });
 
-        if (!Conversation) {
-            Conversation = await Conversation.create({
+        if (!conversation) {
+            conversation = await Conversation.create({
                 participants: [senderId, receiverId],
-            })
+            });
         }
-        const newMessage = await Message({
+        const newMessage = new Message({
             senderId,
             receiverId,
             message,
-        })
+        });
 
-        if(newMessage) {
-            Conversation.messages.push(newMessage._id);
+        if (newMessage) {
+            conversation.messages.push(newMessage._id);
         }
-        
+
+        await conversation.save();
+        await newMessage.save();
+
+        res.status(201).json(newMessage);
+
     } catch (error) {
         console.log("error in sendMessage controller", error.message);
-        return res.status(500).json({error: "Internal server error"});
-        // sdaw
-        
+        return res.status(500).json({ error: "Internal server error" });
     }
 }
+
+
+// const receiverId = mongoose.Types.ObjectId(receiverObjectId);
+// const senderId = mongoose.Types.ObjectId(senderObjectId);
+
+// let conversation = await Conversation.findOne({
+//     participants: { $all: [senderObjectId, receiverObjectId] },
+// });
+
+// if (!conversation) {
+//     conversation = await Conversation.create({
+//         participants: [senderObjectId, receiverObjectId],
+//     });
+// }
