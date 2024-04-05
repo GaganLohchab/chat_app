@@ -10,7 +10,7 @@ const messageSchema = new mongoose.Schema(
         receiverId:{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
+            required: true,
         },
         message:{
             type: String,
@@ -18,7 +18,9 @@ const messageSchema = new mongoose.Schema(
         }
     
     //createdAt, updatedAt
-}, {timestamps:true});
+    },
+    {timestamps:true}
+);
 
 const Message = mongoose.model("Message", messageSchema);
 export default Message; 

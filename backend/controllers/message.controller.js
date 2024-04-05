@@ -28,8 +28,12 @@ export const sendMessage = async (req, res) => {
             conversation.messages.push(newMessage._id);
         }
 
-        await conversation.save();
-        await newMessage.save();
+        //SOCKET IO FUNCTIONALITY WILL GO HERE
+
+        // await conversation.save();
+        // await newMessage.save();
+        //this will run in parallel
+        await Promise.all([conversation.save(), newMessage.save()]);
 
         res.status(201).json(newMessage);
 
@@ -40,15 +44,22 @@ export const sendMessage = async (req, res) => {
 }
 
 
-// const receiverId = mongoose.Types.ObjectId(receiverObjectId);
-// const senderId = mongoose.Types.ObjectId(senderObjectId);
+export const getMessages = async (req, res) => {
+    try {
+        const { id: userToChatId } = req.params;
+        const senderId = req.user._id;
 
-// let conversation = await Conversation.findOne({
-//     participants: { $all: [senderObjectId, receiverObjectId] },
-// });
+        const conversation = await Conversation.findOne({
+            participants: { $all: [senderId, userToChatId] },
+        }).populate("messages"); //.populate will give the actual message not the reference
 
-// if (!conversation) {
-//     conversation = await Conversation.create({
-//         participants: [senderObjectId, receiverObjectId],
-//     });
-// }
+        if(!conversation)  return res.status(200).json([]);
+
+        const messages = conversation.messages;
+        res.status(200).json(messages);
+    } catch (error) {
+        console.log("Error in getMessages controller: ", error.message);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+        
+};
