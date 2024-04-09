@@ -1,4 +1,4 @@
-import useConversation from "../../Zustand/useConversation";
+import useConversation from "../../zustand/useConversation";
 
 // import useConversation from "../../Zustand/useConversation";
 const Conversation = ({conversation,lastIdx,emoji}) => {
