@@ -32,12 +32,6 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "frontend","dist", "index.html"));
 });
 
-// app.get("/", (req, res) => {
-//      // root route http://localhost:5000
-//   res.send("Hello World from server.js");
-// });
-
-
 server.listen(PORT, () => {
     connectToMongoDB();
     console.log(`Server started on port ${PORT}`)
