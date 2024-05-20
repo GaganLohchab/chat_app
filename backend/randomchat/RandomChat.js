@@ -4,7 +4,7 @@ import User from "../models/user.model.js";
 let availableUsers = [];
 
 // Function to handle when a user clicks the "Random Chat" button
-export const handleRandomChat = async (req, res) => {
+export const handleRandomChatClick = async (req, res) => {
   try {
     const userId = req.user._id;
 
