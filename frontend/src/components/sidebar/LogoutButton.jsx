@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BiLogOut } from "react-icons/bi";
 import useLogout from "../../hooks/useLogout";
-// import handleRandomChatClick from "../../../../backend/randomchat/RandomChat"
+import { handleRandomChat } from "../../../../backend/randomchat/RandomChat"
 
 const LogoutButton = () => {
   const { loading, logout } = useLogout();
@@ -22,6 +22,18 @@ const LogoutButton = () => {
 
   const handleRandomChatClick = () => {
     setIsRandomChatLoading(true);
+
+	handleRandomChat()
+    .then(() => {
+      // Handle the successful case
+      console.log("Random chat process completed");
+      setIsRandomChatLoading(false);
+    })
+    .catch((error) => {
+      // Handle the error case
+      console.error("Error in random chat process:", error);
+      setIsRandomChatLoading(false);
+    });
     // Call the function or perform the logic to start the random chat process
     // When the process is completed, set isRandomChatLoading to false
   };
